@@ -19,6 +19,15 @@ Utilizar o **DuckDuckGo** como mecanismo de busca para o enriquecimento de dados
 - O serviço de enriquecimento fica isolado em `src/lib/`, separado do cliente da Open CNPJ.
 - A coleta de conteúdo de páginas de terceiros (se adotada no futuro) deve ser avaliada quanto a termos de uso e confiabilidade.
 
+## Mitigações de risco (scraping do DuckDuckGo)
+O DuckDuckGo não é uma API oficial e pode bloquear requisições automatizadas ou mudar sua estrutura. Para reduzir o risco:
+
+1. **Fallback de endpoints:** tentar em ordem `html.duckduckgo.com/html/` → `lite.duckduckgo.com/lite/` → `api.duckduckgo.com`.
+2. **Retry com backoff:** em erro `429`/timeout, aguardar e tentar novamente (ex: 3 tentativas com espera progressiva).
+3. **Headers realistas:** enviar `User-Agent` de navegador comum e `Accept-Language: pt-BR` para não parecer requisição de bot.
+4. **Cache de resultados:** guardar enriquecimentos já realizados para o mesmo CNPJ, reduzindo chamadas repetidas. O cache é feito **em memória/arquivo no servidor (SSR)** — **sem banco de dados**.
+5. **Degradação graciosa:** se o DuckDuckGo falhar, a página ainda exibe os dados da Open CNPJ; a seção de enriquecimento apenas é marcada como "indisponível". O sistema nunca quebra por causa do DuckDuckGo.
+
 ## Alternativas consideradas
 - **APIs de busca pagas (SerpAPI, Bing):** descartadas por custo incompatível com o portfólio.
 - **Scraping direto de páginas de terceiros:** adiado por questões de termos de uso; o DuckDuckGo entrega links/metadados com menor risco.
