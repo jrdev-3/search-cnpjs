@@ -48,9 +48,9 @@ Usuário
    ▼
 [cnpj-search.service.ts]  ← orquestra o fluxo principal
    │
-   ├── 1. Validação do CNPJ (dígitos verificadores)
+   ├── 1. Validação do CNPJ (dígitos verificadores e formato)
    │
-   ├── 2. [open-cnpj.client.ts] → GET https://api.cnpjs.dev/v1/cnpj/{cnpj}
+   ├── 2. [open-cnpj.client.ts] → GET https://api.opencnpj.org/{cnpj}
    │         → retorna dados oficiais (razão social, email, telefone, endereço, etc.)
    │
    ├── 3. [enrichment.service.ts]  (se a consulta anterior foi OK)
